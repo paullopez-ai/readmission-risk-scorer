@@ -1,0 +1,66 @@
+graph TD
+    subgraph TRAINING ["TRAINING PIPELINE (one-time, offline)"]
+        GEN["scripts/generate-dataset.py<br/>5,000 synthetic discharge records<br/>CMS HRRP feature distributions"]
+        TRAINCSV["data/train.csv<br/>4,000 records"]
+        TESTCSV["data/test.csv<br/>1,000 records held-out"]
+        TRAINPY["scripts/train.py<br/>XGBoost + GridSearchCV<br/>StandardScaler fit"]
+        MODEL["models/xgb_readmission_v1.joblib<br/>models/scaler_v1.joblib<br/>models/feature_names.json"]
+        GEN --> TRAINCSV
+        GEN --> TESTCSV
+        TRAINCSV --> TRAINPY
+        TRAINPY --> MODEL
+    end
+
+    subgraph EVALUATION ["EVALUATION (post-training)"]
+        EVALPY["scripts/evaluate.py<br/>AUROC · F1 · Calibration<br/>SHAP global summary · ROI model"]
+        REPORTS["reports/eval-report.json<br/>reports/shap-summary.png<br/>reports/roc-curve.png<br/>reports/calibration-plot.png"]
+        TESTCSV --> EVALPY
+        MODEL --> EVALPY
+        EVALPY --> REPORTS
+    end
+
+    subgraph INFERENCE_API ["INFERENCE API"]
+        INPUT["POST /predict<br/>DischargeRecord (Pydantic)<br/>13 structured EHR features"]
+        IMPUTE["imputation.py<br/>Median imputation for None fields<br/>Discloses imputed_features"]
+        OOD["ood_check.py<br/>Range check vs. training bounds<br/>Sets ood_warning flag"]
+        XGBOOST["XGBoost predict_proba<br/>StandardScaler.transform<br/>< 5ms inference"]
+        SHAP["SHAP TreeExplainer<br/>Exact Shapley values<br/>Top 3 factors · ~10ms"]
+        TIER["risk_tier.py<br/>HIGH ≥ 0.65<br/>MODERATE 0.35-0.64<br/>LOW < 0.35"]
+        AUDIT["audit.py<br/>feature_hash (SHA-256)<br/>prediction_id · timestamp"]
+        QUEUE["data/review-queue.jsonl<br/>HIGH-tier predictions<br/>Human review checkpoint"]
+        OUTPUT["RiskAssessment (Pydantic)<br/>risk_score · risk_tier<br/>shap_factors[3]<br/>recommended_actions<br/>audit trail · inference_ms · cost_usd"]
+        INPUT --> IMPUTE --> OOD --> XGBOOST --> SHAP --> TIER --> AUDIT --> OUTPUT
+        TIER -- "HIGH tier" --> QUEUE
+    end
+
+    subgraph OPTIONAL ["OPTIONAL (Track 2)"]
+        EXPLAIN["POST /predict/explain<br/>MOCK_LLM=false<br/>+ ANTHROPIC_API_KEY"]
+        HAIKU["Claude Haiku<br/>2-sentence clinical narrative<br/>from SHAP factors"]
+        NARRATIVE["RiskAssessmentWithNarrative<br/>+ narrative field"]
+        EXPLAIN --> HAIKU --> NARRATIVE
+    end
+
+    subgraph AZURE ["HYPERSCALER TRACK (Azure)"]
+        FUNC["Azure Function<br/>POST /predict wrapper"]
+        APIM["Azure API Management<br/>HTTPS endpoint"]
+        AML["Azure ML Managed Endpoint<br/>Standard_DS2_v2<br/>$0.096/hr"]
+        BLOB["Azure Blob Storage<br/>model.tar.gz artifacts"]
+        KEYVAULT["Azure Key Vault<br/>ANTHROPIC_API_KEY"]
+        MONITOR["Azure Monitor<br/>p50/p95/p99 latency"]
+        APIM --> FUNC --> AML
+        BLOB --> AML
+        KEYVAULT --> FUNC
+        AML --> MONITOR
+    end
+
+    subgraph UI ["UI COMPANION (Track 6 · separate repo)"]
+        PAGE1["/ — Discharge input + risk result"]
+        PAGE2["/eval — Model performance dashboard"]
+        PAGE3["/review — High-risk review queue"]
+    end
+
+    MODEL --> XGBOOST
+    REPORTS --> PAGE2
+    OUTPUT --> PAGE1
+    QUEUE --> PAGE3
+    OUTPUT --> APIM

@@ -1,0 +1,7 @@
+# uv configuration for readmission-risk-scorer
+# llvmlite (transitive dep of shap→numba) has no source-buildable LLVM on this machine.
+# Binary wheel for llvmlite-0.45.1 (cp311, macosx_10_15_x86_64) installs cleanly.
+# no-build-package prevents uv from trying to compile llvmlite from source.
+
+[install]
+no-build-package = ["llvmlite"]

@@ -1,0 +1,3 @@
+azure-functions
+azure-identity>=1.16
+azure-ai-ml>=1.16

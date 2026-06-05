@@ -1,0 +1,13 @@
+name: readmission-risk-scorer
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.11
+  - pip
+  - pip:
+    - xgboost>=2.0,<3.1
+    - scikit-learn>=1.4,<1.7
+    - numpy>=1.26,<2.0
+    - joblib>=1.3
+    - azureml-defaults>=1.57

@@ -1,0 +1,36 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.venv/
+*.egg-info/
+dist/
+build/
+
+# Env
+.env
+.env.*
+!.env.example
+
+# Terraform
+infra/terraform/.terraform/
+infra/terraform/.terraform.lock.hcl
+infra/terraform/terraform.tfvars
+infra/terraform/terraform.tfstate
+infra/terraform/terraform.tfstate.backup
+infra/terraform/*.tfplan
+
+# Model packaging (created by package-model.py, not committed)
+model.tar.gz
+
+# Test/coverage
+.pytest_cache/
+htmlcov/
+.coverage
+
+# macOS
+.DS_Store
+
+# IDE
+.vscode/
+.idea/

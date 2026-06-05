@@ -1,0 +1,15 @@
+# Copy to terraform.tfvars and edit. Do NOT commit terraform.tfvars.
+# Sensitive values (anthropic_api_key) should be set via:
+#   export TF_VAR_anthropic_api_key="sk-ant-..."
+
+prefix      = "rrs"
+location    = "eastus"
+environment = "demo"
+
+# VM SKU for AML endpoint — Standard_DS2_v2 is cheapest (~$0.096/hr)
+aml_compute_sku             = "Standard_DS2_v2"
+aml_endpoint_instance_count = 1
+
+# Set true to add Azure API Management in front of the Function App
+# Developer tier adds ~$0.07/hr; false = use Function URL directly
+enable_apim = false

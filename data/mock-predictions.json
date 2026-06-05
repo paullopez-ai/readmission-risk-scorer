@@ -1,0 +1,132 @@
+{
+  "scenario-1-high-risk": {
+    "prediction_id": "mock-scenario-1-0001",
+    "timestamp": "2026-06-04T00:00:00+00:00",
+    "model_version": "xgb_readmission_v1",
+    "feature_hash": "a1b2c3d4e5f67890",
+    "risk_score": 0.81,
+    "risk_tier": "HIGH",
+    "shap_factors": [
+      {
+        "feature": "prior_admissions_12m",
+        "display_name": "Prior Admissions (12 months)",
+        "feature_value": 3,
+        "shap_value": 0.34,
+        "direction": "positive"
+      },
+      {
+        "feature": "discharge_disposition",
+        "display_name": "Discharge Disposition",
+        "feature_value": "SNF",
+        "shap_value": 0.21,
+        "direction": "positive"
+      },
+      {
+        "feature": "comorbidity_index",
+        "display_name": "Comorbidity Index",
+        "feature_value": 5,
+        "shap_value": 0.18,
+        "direction": "positive"
+      }
+    ],
+    "recommended_actions": [
+      "Immediate social work consult before discharge",
+      "48-hour telephonic follow-up by care coordinator",
+      "Medication reconciliation with clinical pharmacist",
+      "Schedule PCP follow-up within 7 days",
+      "Route to high-risk patient review queue"
+    ],
+    "requires_review": true,
+    "imputed_features": [],
+    "ood_warning": false,
+    "low_confidence": false,
+    "inference_ms": 3.2,
+    "cost_usd": 0.0000004
+  },
+  "scenario-2-low-risk": {
+    "prediction_id": "mock-scenario-2-0001",
+    "timestamp": "2026-06-04T00:00:00+00:00",
+    "model_version": "xgb_readmission_v1",
+    "feature_hash": "b2c3d4e5f6789012",
+    "risk_score": 0.12,
+    "risk_tier": "LOW",
+    "shap_factors": [
+      {
+        "feature": "prior_admissions_12m",
+        "display_name": "Prior Admissions (12 months)",
+        "feature_value": 0,
+        "shap_value": -0.28,
+        "direction": "negative"
+      },
+      {
+        "feature": "discharge_disposition",
+        "display_name": "Discharge Disposition",
+        "feature_value": "HOME",
+        "shap_value": -0.19,
+        "direction": "negative"
+      },
+      {
+        "feature": "comorbidity_index",
+        "display_name": "Comorbidity Index",
+        "feature_value": 1,
+        "shap_value": -0.11,
+        "direction": "negative"
+      }
+    ],
+    "recommended_actions": [
+      "Standard discharge education packet",
+      "30-day telephonic follow-up call",
+      "Schedule routine PCP follow-up"
+    ],
+    "requires_review": false,
+    "imputed_features": [],
+    "ood_warning": false,
+    "low_confidence": false,
+    "inference_ms": 2.9,
+    "cost_usd": 0.0000004
+  },
+  "scenario-4-missing-feature": {
+    "prediction_id": "mock-scenario-4-0001",
+    "timestamp": "2026-06-04T00:00:00+00:00",
+    "model_version": "xgb_readmission_v1",
+    "feature_hash": "c3d4e5f678901234",
+    "risk_score": 0.79,
+    "risk_tier": "HIGH",
+    "shap_factors": [
+      {
+        "feature": "prior_admissions_12m",
+        "display_name": "Prior Admissions (12 months)",
+        "feature_value": 3,
+        "shap_value": 0.34,
+        "direction": "positive"
+      },
+      {
+        "feature": "discharge_disposition",
+        "display_name": "Discharge Disposition",
+        "feature_value": "SNF",
+        "shap_value": 0.21,
+        "direction": "positive"
+      },
+      {
+        "feature": "specialist_consult_ct",
+        "display_name": "Specialist Consult Count",
+        "feature_value": 1,
+        "shap_value": 0.08,
+        "direction": "positive"
+      }
+    ],
+    "recommended_actions": [
+      "Immediate social work consult before discharge",
+      "48-hour telephonic follow-up by care coordinator",
+      "Medication reconciliation with clinical pharmacist",
+      "Schedule PCP follow-up within 7 days",
+      "Route to high-risk patient review queue"
+    ],
+    "requires_review": true,
+    "imputed_features": ["specialist_consult_ct"],
+    "ood_warning": false,
+    "low_confidence": false,
+    "inference_ms": 3.5,
+    "cost_usd": 0.0000004
+  }
+}

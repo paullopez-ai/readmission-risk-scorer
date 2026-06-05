@@ -1,0 +1,12 @@
+{
+  "azure_ml_hourly_rate_usd": 0.096,
+  "demo_daily_endpoint_cost_usd": 0.384,
+  "prod_daily_endpoint_cost_usd": 2.304,
+  "daily_discharge_volume": 50,
+  "demo_cost_per_prediction_usd": 0.00768,
+  "llm_narrative_cost_per_call_usd": 0.000175,
+  "cms_penalty_per_prevented_readmission_usd": 15000,
+  "break_even_prevention_rate": 2.6e-05,
+  "break_even_interpretation": "At 50 discharges/day, the model costs $0.38/day to run. One prevented readmission avoids $15,000 in CMS penalties. Break-even requires preventing 0.0026% of scored patients from readmitting \u2014 far below documented intervention rates.",
+  "pricing_source": "Azure pricing calculator, 2026-06-04, East US region"
+}
